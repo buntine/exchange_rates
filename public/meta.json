@@ -13,7 +13,7 @@
       {
         "type": "select",
         "name": "currency",
-        "label": "Your currency",
+        "label": "Your Currency",
         "options": 
           [
             ["Euro", "eur"],
