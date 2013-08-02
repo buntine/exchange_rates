@@ -1,4 +1,5 @@
 require "sinatra"
+require "active_support/core_ext/integer/inflections"
 
 get "/edition/" do
   etag Digest::MD5.hexdigest("edition")

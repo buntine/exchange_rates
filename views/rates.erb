@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Exchange Rates</title>
+
+  <style type="text/css">
+    body {
+      width: 384px;
+      padding: 0px;
+      margin: 0px;
+    }
+    #wrapper {
+      width: 360px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    h1, h3 {
+      word-wrap: break-word;
+      margin: 10px 0 10px 0;
+    }
+    hr {
+      padding: 0;
+      margin-top: 16px;
+      border: none;
+      border-top: medium double #333;
+      color: #333;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <h1>Exchange Rates</h1>
+    <h3><%= Time.now.strftime("%B #{Date.today.day.ordinalize}, %Y") %></h3>
+    <h3>Australian Dollar</h3>
+    <h3>Updated  02/08/2013 06:40 UTC </h3>
+    <table>
+      <th>
+        <td>Rates</td>
+        <td>Inverse</td>
+      </th>
+      <tr>
+        <td>1 AUD = 0.6743 EUR</td>
+        <td>1 EUR = 1.4830 AUD</td>
+      </tr>
+      <tr>
+        <td>1 AUD = 0.8908 USD</td>
+        <td>1 USD = 1.1226 AUD</td>
+      </tr>
+      <tr>
+        <td>1 AUD = 0.5893 GBP</td>
+        <td>1 GBP = 1.6969 AUD</td>
+      </tr>
+    </table>
+    <hr />
+  </div>
+</body>
+</html>
