@@ -8,6 +8,13 @@ supported_curr= ["eur", "usd", "gbp", "aud", "brl", "cad", "chf", "cny", "dkk", 
                  "pab", "pen", "uyu"]
 
 get "/edition/" do
+  # Fetch preferred currency
+  # Fetch datetime.
+  # Xurrency object
+  # For top currs (except chosen)
+    # Get rate and inverse
+  # eTag with updated_at from Xurrency
+
   etag Digest::MD5.hexdigest("edition")
   erb :rates
 end
