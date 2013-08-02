@@ -1,0 +1,10 @@
+{
+"owner_email" : "bunts@hhd.com.au",
+"publication_api_version":"1.0",
+"name": "Exchange Rates",
+"description": "Daily exchange rates for your preferred currency.",
+"delivered_on": "every day",
+"send_timezone_info": true,
+"send_delivery_count": false,
+"external_configuration": true
+}
