@@ -4,14 +4,14 @@ require "simple_xurrency"
 require "active_support/core_ext/integer/inflections"
 
 $supported_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy, :krw,
-                 :lkr, :myr, :nzd, :sgd, :twd, :zar, :thb, :sek, :nok, :mxn, :bgn, :czk, :huf,
-                 :ltl, :lvl, :pln, :ron, :isk, :hrk, :rub, :try, :php, :cop, :ars, :clp, :svc,
-                 :tnd, :pyg, :mad, :jmd, :sar, :qar, :hnl, :syp, :kwd, :bhd, :egp, :omr, :ngn,
-                 :pab, :pen, :uyu]
+                  :lkr, :myr, :nzd, :sgd, :twd, :zar, :thb, :sek, :nok, :mxn, :bgn, :czk, :huf,
+                  :ltl, :lvl, :pln, :ron, :isk, :hrk, :rub, :try, :php, :cop, :ars, :clp, :svc,
+                  :tnd, :pyg, :mad, :jmd, :sar, :qar, :hnl, :syp, :kwd, :bhd, :egp, :omr, :ngn,
+                  :pab, :pen, :uyu]
 
 $popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy]
 
-SimpleXurrency.key = "a68f78dfde1be099be24543b7096a838"
+SimpleXurrency.key = "API_KEY"
 
 helpers do
 def build_rates(curr)
