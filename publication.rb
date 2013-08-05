@@ -1,4 +1,5 @@
 require "sinatra"
+require "date"
 require "simple_xurrency"
 require "active_support/core_ext/integer/inflections"
 
@@ -13,6 +14,9 @@ popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr
 SimpleXurrency.key="a68f78dfde1be099be24543b7096a838"
 
 get "/edition/" do
+  return 400, "Error: No local_delivery_time was provided" if params["local_delivery_time"].nil?
+  return 400, "Error: No currency was provided" if params["currency"].nil?
+
   @currency = params[:currency]
   @rates = []
 
@@ -24,11 +28,14 @@ get "/edition/" do
       end
     end
 
-    @updated_at = 1.send(@currency).send("to_#{popular_curr.first}_updated_at")
+    @local_time = Time.parse(params[:local_delivery_time])
+    @updated_at = Time.parse(1.send(@currency).send("to_#{popular_curr.first}_updated_at")) - (60 * 60)
+  else
+    return 400, "Error: Invalid currency was provided"
   end
 
   content_type "text/html; charset=utf-8"
-  etag Digest::MD5.hexdigest(@updated_at)
+  etag Digest::MD5.hexdigest(@updated_at.to_s)
   erb :rates
 end
 
