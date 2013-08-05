@@ -11,11 +11,11 @@ supported_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :i
 
 popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy]
 
-SimpleXurrency.key="a68f78dfde1be099be24543b7096a838"
+SimpleXurrency.key = "a68f78dfde1be099be24543b7096a838"
 
 get "/edition/" do
-  return 400, "Error: No local_delivery_time was provided" if params["local_delivery_time"].nil?
-  return 400, "Error: No currency was provided" if params["currency"].nil?
+  return 400, "Error: No local_delivery_time was provided" if params[:local_delivery_time].nil?
+  return 400, "Error: No currency was provided" if params[:currency].nil?
 
   @currency = params[:currency]
   @rates = []
