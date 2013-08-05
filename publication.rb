@@ -8,33 +8,27 @@ supported_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :i
                  :tnd, :pyg, :mad, :jmd, :sar, :qar, :hnl, :syp, :kwd, :bhd, :egp, :omr, :ngn,
                  :pab, :pen, :uyu]
 
-popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy, :krw]
+popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy]
 
 SimpleXurrency.key="a68f78dfde1be099be24543b7096a838"
 
 get "/edition/" do
-  # Fetch preferred currency
-  # Fetch datetime.
-  # Xurrency object
-  # For top currs (except chosen)
-    # Get rate and inverse
-  # eTag with updated_at from Xurrency
-
-  currency = params[:currency]
+  @currency = params[:currency]
   @rates = []
 
-  if supported_curr.include?(currency.to_sym)
+  if supported_curr.include?(@currency.to_sym)
     popular_curr.each do |pc|
-      unless pc.to_s == currency.to_s
-        @rates << [1.send(currency).send("to_#{pc}"),
-                   1.send(pc).send("to_#{currency}"),
-                   1.send(currency).send("to_#{pc}_updated_at")]
+      unless pc.to_s == @currency.to_s
+        rate = 1.send(@currency).send("to_#{pc}")
+        @rates << [pc, rate, (1.0 / rate).round(4)]
       end
     end
+
+    @updated_at = 1.send(@currency).send("to_#{popular_curr.first}_updated_at")
   end
 
   content_type "text/html; charset=utf-8"
-  etag Digest::MD5.hexdigest(Time.now.to_i.to_s)
+  etag Digest::MD5.hexdigest(@updated_at)
   erb :rates
 end
 

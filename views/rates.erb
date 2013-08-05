@@ -32,25 +32,18 @@
   <div id="wrapper">
     <h1>Exchange Rates</h1>
     <h3>Australian Dollar</h3>
-    <h3>Updated  02/08/2013 06:40 UTC </h3>
-<%= @rates %>
+    <h3>Updated  <%= @updated_at %> 02/08/2013 06:40 UTC </h3>
     <table>
       <th>
         <td>Rates</td>
         <td>Inverse</td>
       </th>
+      <% @rates.each do |r| %>
       <tr>
-        <td>1 AUD = 0.6743 EUR</td>
-        <td>1 EUR = 1.4830 AUD</td>
+        <td>1 <%= @currency.upcase %> = <%= r[1] %> <%= r[0].upcase %></td>
+        <td>1 <%= r[0].upcase %> = <%= r[2] %> <%= r[0].upcase %></td>
       </tr>
-      <tr>
-        <td>1 AUD = 0.8908 USD</td>
-        <td>1 USD = 1.1226 AUD</td>
-      </tr>
-      <tr>
-        <td>1 AUD = 0.5893 GBP</td>
-        <td>1 GBP = 1.6969 AUD</td>
-      </tr>
+      <% end %>
     </table>
     <hr />
   </div>
