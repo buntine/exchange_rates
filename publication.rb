@@ -4,23 +4,43 @@ require "json"
 require "simple_xurrency"
 require "active_support/core_ext/integer/inflections"
 
-$supported_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy, :krw,
-                  :lkr, :myr, :nzd, :sgd, :twd, :zar, :thb, :sek, :nok, :mxn, :bgn, :czk, :huf,
-                  :ltl, :lvl, :pln, :ron, :isk, :hrk, :rub, :try, :php, :cop, :ars, :clp, :svc,
-                  :tnd, :pyg, :mad, :jmd, :sar, :qar, :hnl, :syp, :kwd, :bhd, :egp, :omr, :ngn,
-                  :pab, :pen, :uyu]
 
-$popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy]
-
-SimpleXurrency.key = "API_KEY"
+SimpleXurrency.key = "a68f78dfde1be099be24543b7096a838"
 
 helpers do
+  @@supported_curr = {:eur => "Euro", :usd => "United States Dollar", :gbp => "Pound Sterling", :aud => "Australian Dollar",
+                      :brl => "Brazilian Real", :cad => "Canadian Dollar", :chf => "Swiss Franc", :cny => "Chinese Yuan",
+                      :dkk => "Danish Krone", :hkd => "Hong Kong Dollar", :inr => "Indian Rupee", :jpy => "Japanese Yen",
+                      :krw => "Korea Won", :lkr => "Sri Lanka Rupee", :myr => "Malasian Ringgit", :nzd => "New Zealand Dollar",
+                      :sgd => "Singapore Dollar", :twd => "Taiwan Dollar", :zar => "South Africa Rand", :thb => "Thailand Baht",
+                      :sek => "Swedish Krona", :nok => "Norwegian Krone", :mxn => "Mexican Peso", :bgn => "Bulgarian Lev",
+                      :czk => "Czech Koruna", :huf => "Hungarian Forint", :ltl => "Lithuanian Litas", :lvl => "Latvian Lats",
+                      :pln => "Polish Zloty", :ron => "New Romanian Leu", :isk => "Icelandic Krona", :hrk => "Croatian Kuna",
+                      :rub => "Russian Rouble", :try => "New Turkish Lira", :php => "Philippine Peso", :cop => "Columbian Peso",
+                      :ars => "Argentine Peso", :clp => "Chilean Peso", :svc => "Salvadoran colon", :tnd => "Tunisian Denar",
+                      :pyg => "paraguay Guarani", :mad => "Moroccan Dirham", :jmd => "Jamaican Dollar", :sar => "Saudi Arabian Riyal",
+                      :qar => "Qatari Riyal", :hnl => "Honduran Lempira", :syp => "Syrian Pound", :kwd => "Kuwaiti Dinar",
+                      :bhd => "Bahrain Dinar", :egp => "Egyptian Pound", :omr => "Omani Rial", :ngn => "Nigrian Naira",
+                      :pab => "Panama Balboa", :pen => "Peruvian Nuevo Sol", :uyu => "Uruguayan New Peso"}
+
+  @@popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy]
+
+  def is_supported_curr?(curr)
+    @@supported_curr.keys.include?(curr.to_sym)
+  end
+
+  def updated_at(curr)
+    to_curr = @@popular_curr.find { |pc| pc != curr.to_sym }
+    1.send(curr).send("to_#{to_curr}_updated_at")
+  end
+
   def build_rates(curr)
     @currency = curr
+    @currency_name = @@supported_curr[curr.to_sym]
     @rates = []
   
-    if $supported_curr.include?(@currency.to_sym)
-      $popular_curr.each do |pc|
+    if is_supported_curr?(@currency)
+      @@popular_curr.each do |pc|
         unless pc.to_s == @currency.to_s
           rate = 1.send(@currency).send("to_#{pc}")
           @rates << [pc, rate, (1.0 / rate).round(4)]
@@ -33,7 +53,7 @@ helpers do
         Time.now
       end
   
-      @updated_at = Time.parse(1.send(@currency).send("to_#{$popular_curr.first}_updated_at")) - (60 * 60)
+      @updated_at = Time.parse(updated_at(@currency)) - (60 * 60)
   
       true
     end
@@ -55,7 +75,7 @@ get "/edition/" do
   end
 
   content_type "text/html; charset=utf-8"
-  etag Digest::MD5.hexdigest(curr + @updated_at.to_s)
+  etag Digest::MD5.hexdigest(@currency + @updated_at.to_s)
   erb :rates
 end
 
@@ -85,7 +105,7 @@ post "/validate_config/" do
     response[:errors].push("Please select a currency from the select box.")
   end
   
-  unless $supported_curr.include?(user_settings["currency"].downcase.to_sym)
+  unless is_supported_curr?(user_settings["currency"].downcase)
     response[:valid] = false
     response[:errors].push("We couldn't find the currency you selected (#{user_settings["currency"]}). Please select another.")
   end

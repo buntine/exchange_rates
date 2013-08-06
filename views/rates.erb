@@ -42,7 +42,7 @@
 <body>
   <div id="wrapper">
     <h1>Exchange Rates</h1>
-    <h3>Currency Name</h3>
+    <h3><%= @currency_name %></h3>
     <h3>Updated <%= (@updated_at + @local_time.utc_offset).strftime("%Y-%m-%d %I:%M%P") %></h3>
     <table>
       <thead>
