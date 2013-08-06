@@ -14,41 +14,47 @@ $popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :in
 SimpleXurrency.key = "API_KEY"
 
 helpers do
-def build_rates(curr)
-  @currency = curr
-  @rates = []
-
-  if $supported_curr.include?(@currency.to_sym)
-    $popular_curr.each do |pc|
-      unless pc.to_s == @currency.to_s
-        rate = 1.send(@currency).send("to_#{pc}")
-        @rates << [pc, rate, (1.0 / rate).round(4)]
+  def build_rates(curr)
+    @currency = curr
+    @rates = []
+  
+    if $supported_curr.include?(@currency.to_sym)
+      $popular_curr.each do |pc|
+        unless pc.to_s == @currency.to_s
+          rate = 1.send(@currency).send("to_#{pc}")
+          @rates << [pc, rate, (1.0 / rate).round(4)]
+        end
       end
+  
+      @local_time = if params[:local_delivery_time]
+        Time.parse(params[:local_delivery_time])
+      else
+        Time.now
+      end
+  
+      @updated_at = Time.parse(1.send(@currency).send("to_#{$popular_curr.first}_updated_at")) - (60 * 60)
+  
+      true
     end
-
-    @local_time = if params[:local_delivery_time]
-      Time.parse(params[:local_delivery_time])
-    else
-      Time.now
-    end
-
-    @updated_at = Time.parse(1.send(@currency).send("to_#{$popular_curr.first}_updated_at")) - (60 * 60)
-
-    true
   end
-end
 end
 
 get "/edition/" do
-  return 400, "Error: No local_delivery_time was provided" if params[:local_delivery_time].nil?
-  return 400, "Error: No currency was provided" if params[:currency].nil?
+  curr = if not params[:test]
+    return 400, "Error: No local_delivery_time was provided" if params[:local_delivery_time].nil?
+    return 400, "Error: No currency was provided" if params[:currency].nil?
 
-  if not build_rates(params[:currency])
+    params[:currency]
+  else
+    "usd"
+  end
+
+  if not build_rates(curr)
     return 400, "Error: Invalid currency was provided"
   end
 
   content_type "text/html; charset=utf-8"
-  etag Digest::MD5.hexdigest(@currency + @updated_at.to_s)
+  etag Digest::MD5.hexdigest(curr + @updated_at.to_s)
   erb :rates
 end
 
