@@ -1,5 +1,6 @@
 require "sinatra"
 require "date"
+require "json"
 require "simple_xurrency"
 require "active_support/core_ext/integer/inflections"
 
@@ -68,7 +69,7 @@ get "/sample/" do
   erb :rates
 end
 
-get "/validate_config/" do
+post "/validate_config/" do
   response = {}
   response[:errors] = []
   response[:valid] = true
@@ -84,7 +85,7 @@ get "/validate_config/" do
     response[:errors].push("Please select a currency from the select box.")
   end
   
-  unless $supported_curr.include?(user_settings["currency"].downcase)
+  unless $supported_curr.include?(user_settings["currency"].downcase.to_sym)
     response[:valid] = false
     response[:errors].push("We couldn't find the currency you selected (#{user_settings["currency"]}). Please select another.")
   end
