@@ -38,15 +38,9 @@ helpers do
     @currency = curr
     @currency_name = @@supported_curr[curr.to_sym]
     @rates = []
-<<<<<<< HEAD
-
-    if $supported_curr.include?(@currency.to_sym)
-      $popular_curr.each do |pc|
-=======
 
     if is_supported_curr?(@currency)
       @@popular_curr.each do |pc|
->>>>>>> a897c5bbe9318b1814182235212fda3eeaede54e
         unless pc.to_s == @currency.to_s
           rate = 1.send(@currency).send("to_#{pc}")
           @rates << [pc, rate, (1.0 / rate).round(4)]
@@ -58,15 +52,9 @@ helpers do
       else
         Time.now
       end
-<<<<<<< HEAD
-
-      @updated_at = Time.parse(1.send(@currency).send("to_#{$popular_curr.first}_updated_at")) - (60 * 60)
-
-=======
 
       @updated_at = Time.parse(updated_at(@currency)) - (60 * 60)
 
->>>>>>> a897c5bbe9318b1814182235212fda3eeaede54e
       true
     end
   end
@@ -116,13 +104,8 @@ post "/validate_config/" do
     response[:valid] = false
     response[:errors].push("Please select a currency from the select box.")
   end
-<<<<<<< HEAD
-
-  unless $supported_curr.include?(user_settings["currency"].downcase.to_sym)
-=======
 
   unless is_supported_curr?(user_settings["currency"].downcase)
->>>>>>> a897c5bbe9318b1814182235212fda3eeaede54e
     response[:valid] = false
     response[:errors].push("We couldn't find the currency you selected (#{user_settings["currency"]}). Please select another.")
   end
