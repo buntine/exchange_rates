@@ -12,13 +12,13 @@ $supported_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :
 
 $popular_curr = [:eur, :usd, :gbp, :aud, :brl, :cad, :chf, :cny, :dkk, :hkd, :inr, :jpy]
 
-SimpleXurrency.key = "API_KEY"
+SimpleXurrency.key = "a68f78dfde1be099be24543b7096a838	"
 
 helpers do
   def build_rates(curr)
     @currency = curr
     @rates = []
-  
+
     if $supported_curr.include?(@currency.to_sym)
       $popular_curr.each do |pc|
         unless pc.to_s == @currency.to_s
@@ -26,15 +26,15 @@ helpers do
           @rates << [pc, rate, (1.0 / rate).round(4)]
         end
       end
-  
+
       @local_time = if params[:local_delivery_time]
         Time.parse(params[:local_delivery_time])
       else
         Time.now
       end
-  
+
       @updated_at = Time.parse(1.send(@currency).send("to_#{$popular_curr.first}_updated_at")) - (60 * 60)
-  
+
       true
     end
   end
@@ -73,7 +73,7 @@ post "/validate_config/" do
   response = {}
   response[:errors] = []
   response[:valid] = true
-  
+
   if params[:config].nil?
     return 400, "You did not post any config to validate"
   end
@@ -84,12 +84,12 @@ post "/validate_config/" do
     response[:valid] = false
     response[:errors].push("Please select a currency from the select box.")
   end
-  
+
   unless $supported_curr.include?(user_settings["currency"].downcase.to_sym)
     response[:valid] = false
     response[:errors].push("We couldn't find the currency you selected (#{user_settings["currency"]}). Please select another.")
   end
-  
+
   content_type :json
   response.to_json
 end

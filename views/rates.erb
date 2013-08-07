@@ -2,65 +2,34 @@
 <html>
 <head>
   <title>Exchange Rates</title>
-
-  <style type="text/css">
-    body {
-      width: 384px;
-      padding: 0px;
-      margin: 0px;
-    }
-    #wrapper {
-      width: 360px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    h1, h3 {
-      word-wrap: break-word;
-      margin: 10px 0 10px 0;
-    }
-    hr {
-      padding: 0;
-      margin-top: 16px;
-      border: none;
-      border-top: medium double #333;
-      color: #333;
-      text-align: center;
-    }
-
-    table {
-      width: 360px;
-      margin: 0;
-      padding: 0;
-    }
-
-    table tr td {
-      font-size: 14px;
-      width: 160px;
-    }
-  </style>
+  <link href="/stylesheets/styles.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-  <div id="wrapper">
-    <h1>Exchange Rates</h1>
-    <h3>Currency Name</h3>
-    <h3>Updated <%= (@updated_at + @local_time.utc_offset).strftime("%Y-%m-%d %I:%M%P") %></h3>
+  <header>
+    <h1>Exchange<br/>Rates</h1>
+
+    <div class="today">
+      <h2>AUD</h2>
+      <h3><%= (@updated_at + @local_time.utc_offset).strftime("%Y-%m-%d %I:%M%P") %></h3>
+    </div><!--endDiv today-->
+  </header>
+  <div class="content">
     <table>
-      <thead>
-        <tr>
-          <th>Rates</th>
-          <th>Inverse</th>
-        </tr>
-      </thead>
       <tbody>
         <% @rates.each do |r| %>
         <tr>
+          <td class="change"><img src="/images/arrow-up.gif" alt="Up" />
+          <td class="rate">0.675 eur</td>
+          <td class="conversion">1 <em>eur</em> = 1.481 aud</td>
+<!--
           <td>1 <%= @currency.upcase %> = <%= r[1] .round(3)%> <%= r[0].upcase %></td>
           <td>1 <%= r[0].upcase %> = <%= r[2].round(3) %> <%= @currency.upcase %></td>
+-->
         </tr>
+        <tr class="spacer"><td colspan="3"></td></tr>
         <% end %>
       </tbody>
     </table>
-    <hr />
   </div>
 </body>
 </html>
