@@ -171,10 +171,8 @@
     <h1>Exchange<br/>Rates</h1>
 
     <div class="today">
-      <h2><%= @currency_name %></h2>
-
-      <h3>Wednesday 7th August 2013	<br/>10:36AM AEST</h3>
-<!--       <h3><%= (@updated_at + @local_time.utc_offset).strftime("%Y-%m-%d %I:%M%P") %></h3> -->
+      <h2><%= @currency.upcase %></h2>
+      <h3><%= @local_updated_at.strftime("%A #{@local_updated_at.day.ordinalize} %B %Y<br />%I:%M%P") %></h3>
     </div><!--endDiv today-->
   </header>
   <div class="content">
@@ -182,13 +180,9 @@
       <tbody>
         <% @rates.each do |r| %>
         <tr>
-          <td class="change"><img src="/images/arrow-up.gif" alt="Up" />
-          <td class="rate">0.675 eur</td>
-          <td class="conversion">1 <em>eur</em> = 1.481 aud</td>
-<!--
-          <td>1 <%= @currency.upcase %> = <%= r[1] .round(3)%> <%= r[0].upcase %></td>
-          <td>1 <%= r[0].upcase %> = <%= r[2].round(3) %> <%= @currency.upcase %></td>
--->
+          <td class="change"><img src="/images/arrow-<%= r[3] ? "up" : "down" %>.gif" alt="Movement" />
+          <td class="rate"><%= r[1].round(3) %> <%= r[0].upcase %></td>
+          <td class="conversion">1 <em><%= r[0].upcase %></em> = <%= r[2].round(3) %> <%= @currency.upcase %></td>
         </tr>
         <tr class="spacer"><td colspan="3"></td></tr>
         <% end %>

@@ -5,7 +5,7 @@ require "simple_xurrency"
 require "active_support/core_ext/integer/inflections"
 
 
-SimpleXurrency.key = "API_KEY"
+SimpleXurrency.key = "a68f78dfde1be099be24543b7096a838"
 
 helpers do
   @@supported_curr = {:eur => "Euro", :usd => "United States Dollar", :gbp => "Pound Sterling", :aud => "Australian Dollar",
@@ -43,7 +43,10 @@ helpers do
       @@popular_curr.each do |pc|
         unless pc.to_s == @currency.to_s
           rate = 1.send(@currency).send("to_#{pc}")
-          @rates << [pc, rate, (1.0 / rate).round(4)]
+          old_rate = 1.send(@currency).send("to_#{pc}", Date.today - 3)
+          is_up = rate > old_rate
+
+          @rates << [pc, rate, (1.0 / rate).round(4), is_up]
         end
       end
 
@@ -53,7 +56,9 @@ helpers do
         Time.now
       end
 
-      @updated_at = Time.parse(updated_at(@currency)) - (60 * 60)
+      # For some reason the API is returning Samoan time (UTC + 13)
+      @updated_at = Time.parse(updated_at(@currency)) - (60 * 60 * 13)
+      @local_updated_at = @updated_at + @local_time.utc_offset
 
       true
     end
