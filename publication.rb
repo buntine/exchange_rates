@@ -5,7 +5,7 @@ require "simple_xurrency"
 require "active_support/core_ext/integer/inflections"
 
 
-SimpleXurrency.key = "a68f78dfde1be099be24543b7096a838"
+SimpleXurrency.key = "API_KEY"
 
 helpers do
   @@supported_curr = {:eur => "Euro", :usd => "United States Dollar", :gbp => "Pound Sterling", :aud => "Australian Dollar",
